@@ -13,7 +13,7 @@ const JobDetails = () => {
 
   useEffect(() => {
     if (!job) {
-      const fetchJob = async () => {
+      (async () => {
         try {
           const token = localStorage.getItem("token");
           const res = await axios.get(
@@ -24,20 +24,17 @@ const JobDetails = () => {
           );
           setJob(res.data);
         } catch (err) {
-          console.error("Error fetching job:", err);
-          toast.error("Job not found or error loading details");
+          console.error(err);
+          toast.error("Error loading job details");
           setJob(null);
         } finally {
           setLoading(false);
         }
-      };
-      fetchJob();
+      })();
     }
   }, [id, job]);
 
-  const handlePrint = () => {
-    window.print();
-  };
+  const handlePrint = () => window.print();
 
   if (loading) {
     return (
@@ -51,13 +48,13 @@ const JobDetails = () => {
 
   if (!job) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-100">
-        <div className="max-w-md bg-white shadow-md rounded-lg p-6 text-center">
+      <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
+        <div className="bg-white p-6 rounded-lg shadow-lg text-center max-w-md">
           <h2 className="text-2xl font-bold text-red-600 mb-2">
             Job Not Found
           </h2>
           <p className="text-gray-600 mb-4">
-            Either the job was deleted or the link is incorrect.
+            This job doesn't exist or was removed.
           </p>
           <button
             onClick={() => navigate("/dashboard")}
@@ -72,18 +69,15 @@ const JobDetails = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 py-10 px-6 print:bg-white print:text-black">
-      <div className="max-w-3xl mx-auto bg-white shadow-xl rounded-lg p-8 print:shadow-none print:p-0 print:rounded-none">
-        <div className="flex justify-between items-center mb-6 border-b pb-4 print:border-none">
-          <h1 className="text-4xl font-extrabold text-gray-800 print:text-black">
-            Job Details
-          </h1>
-
-          <div className="space-x-2 hidden print:hidden md:block">
+      <div className="max-w-3xl mx-auto bg-white shadow-lg rounded-lg p-8 print:shadow-none print:p-0 print:rounded-none">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b pb-4 print:border-none">
+          <h1 className="text-3xl font-bold text-gray-800">Job Details</h1>
+          <div className="flex gap-3 print:hidden">
             <button
               onClick={() => navigate("/dashboard")}
-              className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 transition"
+              className="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800 transition"
             >
-              Back
+              Back to Dashboard
             </button>
             <button
               onClick={handlePrint}
@@ -94,16 +88,16 @@ const JobDetails = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-gray-700 print:text-black">
-          <DetailItem label="Company" value={job.company} />
-          <DetailItem label="Role" value={job.role} />
-          <DetailItem label="Status" value={job.status} />
-          <DetailItem
+        <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6 text-gray-700 print:text-black">
+          <Detail label="Company" value={job.company} />
+          <Detail label="Role" value={job.role} />
+          <Detail label="Status" value={job.status} />
+          <Detail
             label="Applied Date"
             value={new Date(job.appliedDate).toLocaleDateString()}
           />
           <div className="md:col-span-2">
-            <DetailItem label="Notes" value={job.notes || "None"} />
+            <Detail label="Notes" value={job.notes || "None"} />
           </div>
         </div>
       </div>
@@ -111,9 +105,9 @@ const JobDetails = () => {
   );
 };
 
-const DetailItem = ({ label, value }) => (
+const Detail = ({ label, value }) => (
   <div>
-    <h3 className="text-lg font-semibold text-gray-700">{label}</h3>
+    <h3 className="text-lg font-semibold">{label}</h3>
     <p className="text-gray-600 whitespace-pre-line">{value}</p>
   </div>
 );

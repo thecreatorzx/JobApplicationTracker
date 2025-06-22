@@ -13,159 +13,149 @@ const JobForm = ({ refreshJobs, editingJob, setEditingJob }) => {
 
   useEffect(() => {
     if (editingJob) {
-      setFormData(editingJob);
+      const formattedDate = editingJob.appliedDate
+        ? new Date(editingJob.appliedDate).toISOString().split("T")[0]
+        : "";
+      setFormData({ ...editingJob, appliedDate: formattedDate });
+    } else {
+      setFormData({
+        company: "",
+        role: "",
+        status: "Applied",
+        appliedDate: "",
+        notes: "",
+      });
     }
   }, [editingJob]);
+
+  const resetForm = () => {
+    setFormData({
+      company: "",
+      role: "",
+      status: "Applied",
+      appliedDate: "",
+      notes: "",
+    });
+    setEditingJob(null);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const token = localStorage.getItem("token");
+      const config = { headers: { Authorization: `Bearer ${token}` } };
+
       if (editingJob) {
         await axios.put(
           `${process.env.REACT_APP_API_URL}/api/jobs/${editingJob._id}`,
           formData,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
+          config
         );
-        toast.success("Job updated!");
+        toast.success("Job updated successfully!");
       } else {
         await axios.post(
           `${process.env.REACT_APP_API_URL}/api/jobs`,
           formData,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
+          config
         );
-        toast.success("Job added! Email sent.");
+        toast.success("Job added and email sent!");
       }
+
       await refreshJobs();
-      setFormData({
-        company: "",
-        role: "",
-        status: "Applied",
-        appliedDate: "",
-        notes: "",
-      });
-      setEditingJob(null);
+      resetForm();
     } catch (err) {
-      toast.error("Error saving job");
+      toast.error("Something went wrong. Using mock fallback.");
       await refreshJobs();
-      setFormData({
-        company: "",
-        role: "",
-        status: "Applied",
-        appliedDate: "",
-        notes: "",
-      });
-      setEditingJob(null);
-      toast.success(editingJob ? "Mock job updated!" : "Mock job added!");
+      resetForm();
+      toast.success(editingJob ? "Mock job updated" : "Mock job added");
     }
   };
 
   return (
     <form
       onSubmit={handleSubmit}
-      className="max-w-md mx-auto p-4 bg-white shadow-md rounded animate-fade-in"
+      className="bg-white p-6 rounded-lg shadow-lg space-y-4 animate-fade-in"
     >
-      <div className="mb-4">
-        <label
-          htmlFor="company"
-          className="block text-sm font-medium text-gray-700"
-        >
-          Company
-        </label>
-        <input
-          id="company"
-          type="text"
-          placeholder="Company"
-          value={formData.company}
-          onChange={(e) =>
-            setFormData({ ...formData, company: e.target.value })
-          }
-          className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-          required
-        />
-      </div>
-      <div className="mb-4">
-        <label
-          htmlFor="role"
-          className="block text-sm font-medium text-gray-700"
-        >
-          Role
-        </label>
-        <input
-          id="role"
-          type="text"
-          placeholder="Role"
-          value={formData.role}
-          onChange={(e) => setFormData({ ...formData, role: e.target.value })}
-          className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-          required
-        />
-      </div>
-      <div className="mb-4">
-        <label
-          htmlFor="status"
-          className="block text-sm font-medium text-gray-700"
-        >
-          Status
-        </label>
-        <select
-          id="status"
-          value={formData.status}
-          onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-          className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-        >
-          <option value="Applied">Applied</option>
-          <option value="Interview">Interview</option>
-          <option value="Offer">Offer</option>
-          <option value="Rejected">Rejected</option>
-          <option value="Accepted">Accepted</option>
-        </select>
-      </div>
-      <div className="mb-4">
-        <label
-          htmlFor="appliedDate"
-          className="block text-sm font-medium text-gray-700"
-        >
-          Applied Date
-        </label>
-        <input
-          id="appliedDate"
-          type="date"
-          value={formData.appliedDate}
-          onChange={(e) =>
-            setFormData({ ...formData, appliedDate: e.target.value })
-          }
-          className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-          required
-        />
-      </div>
-      <div className="mb-4">
-        <label
-          htmlFor="notes"
-          className="block text-sm font-medium text-gray-700"
-        >
+      <InputField
+        label="Company"
+        type="text"
+        value={formData.company}
+        onChange={(v) => setFormData({ ...formData, company: v })}
+        required
+      />
+      <InputField
+        label="Role"
+        type="text"
+        value={formData.role}
+        onChange={(v) => setFormData({ ...formData, role: v })}
+        required
+      />
+      <SelectField
+        label="Status"
+        value={formData.status}
+        options={["Applied", "Interview", "Offer", "Rejected", "Accepted"]}
+        onChange={(v) => setFormData({ ...formData, status: v })}
+      />
+      <InputField
+        label="Applied Date"
+        type="date"
+        value={formData.appliedDate}
+        onChange={(v) => setFormData({ ...formData, appliedDate: v })}
+        required
+      />
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">
           Notes
         </label>
         <textarea
-          id="notes"
-          placeholder="Notes"
+          rows={3}
           value={formData.notes}
           onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-          className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+          className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 transition"
         />
       </div>
       <button
         type="submit"
-        className="w-full p-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+        className="w-full py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
       >
         {editingJob ? "Update Job" : "Add Job"}
       </button>
     </form>
   );
 };
+
+const InputField = ({ label, type, value, onChange, required }) => (
+  <div>
+    <label className="block text-sm font-medium text-gray-700 mb-1">
+      {label}
+    </label>
+    <input
+      type={type}
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 transition"
+      required={required}
+    />
+  </div>
+);
+
+const SelectField = ({ label, value, options, onChange }) => (
+  <div>
+    <label className="block text-sm font-medium text-gray-700 mb-1">
+      {label}
+    </label>
+    <select
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 transition"
+    >
+      {options.map((opt) => (
+        <option key={opt} value={opt}>
+          {opt}
+        </option>
+      ))}
+    </select>
+  </div>
+);
 
 export default JobForm;

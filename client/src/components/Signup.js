@@ -12,6 +12,7 @@ const Signup = () => {
     password: "",
     confirmPassword: "",
   });
+
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
 
@@ -61,168 +62,103 @@ const Signup = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-      <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-md">
-        <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
-          Sign Up
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 via-white to-blue-50 px-4 py-10">
+      <div className="w-full max-w-md bg-white rounded-xl shadow-xl p-8 animate-fade-in">
+        <h2 className="text-3xl font-bold text-center text-blue-700 mb-6">
+          Create an Account
         </h2>
-        <form onSubmit={handleSubmit} id="signupForm" className="space-y-4">
-          <div>
-            <label
-              htmlFor="firstName"
-              className="block text-sm font-medium text-gray-700"
-            >
-              First Name
-            </label>
-            <input
-              id="firstName"
-              type="text"
-              placeholder="First Name"
-              value={formData.firstName}
-              onChange={(e) =>
-                setFormData({ ...formData, firstName: e.target.value })
-              }
-              className={`w-full p-2 mt-1 border rounded-md focus:outline-none focus:ring-2 ${
-                errors.firstName ? "border-red-500" : "focus:ring-blue-500"
-              } transition`}
-              required
-            />
-            {errors.firstName && (
-              <p className="text-red-500 text-xs mt-1">{errors.firstName}</p>
-            )}
-          </div>
-          <div>
-            <label
-              htmlFor="lastName"
-              className="optional block text-sm font-medium text-gray-700"
-            >
-              Last Name
-            </label>
-            <input
-              id="lastName"
-              type="text"
-              placeholder="Last Name"
-              value={formData.lastName}
-              onChange={(e) =>
-                setFormData({ ...formData, lastName: e.target.value })
-              }
-              className={`w-full p-2 mt-1 border rounded-md focus:outline-none focus:ring-2 ${
-                errors.lastName ? "border-red-500" : "focus:ring-blue-500"
-              } transition`}
-            />
-            {errors.lastName && (
-              <p className="text-red-500 text-xs mt-1">{errors.lastName}</p>
-            )}
-          </div>
-          <div>
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Email
-            </label>
-            <input
-              id="email"
-              type="email"
-              placeholder="Email"
-              value={formData.email}
-              onChange={(e) =>
-                setFormData({ ...formData, email: e.target.value })
-              }
-              className={`w-full p-2 mt-1 border rounded-md focus:outline-none focus:ring-2 ${
-                errors.email ? "border-red-500" : "focus:ring-blue-500"
-              } transition`}
-              required
-            />
-            {errors.email && (
-              <p className="text-red-500 text-xs mt-1">{errors.email}</p>
-            )}
-          </div>
-          <div>
-            <label
-              htmlFor="phone"
-              className="optional block text-sm font-medium text-gray-700"
-            >
-              Phone Number
-            </label>
-            <input
-              id="phone"
-              type="text"
-              placeholder="Phone Number"
-              value={formData.phone}
-              onChange={(e) =>
-                setFormData({ ...formData, phone: e.target.value })
-              }
-              className={`w-full p-2 mt-1 border rounded-md focus:outline-none focus:ring-2 ${
-                errors.phone ? "border-red-500" : "focus:ring-blue-500"
-              } transition`}
-            />
-            {errors.phone && (
-              <p className="text-red-500 text-xs mt-1">{errors.phone}</p>
-            )}
-          </div>
-          <div>
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Password
-            </label>
-            <input
-              id="password"
-              type="password"
-              placeholder="Password"
-              value={formData.password}
-              onChange={(e) =>
-                setFormData({ ...formData, password: e.target.value })
-              }
-              className={`w-full p-2 mt-1 border rounded-md focus:outline-none focus:ring-2 ${
-                errors.password ? "border-red-500" : "focus:ring-blue-500"
-              } transition`}
-              required
-            />
-            {errors.password && (
-              <p className="text-red-500 text-xs mt-1">{errors.password}</p>
-            )}
-          </div>
-          <div>
-            <label
-              htmlFor="confirmPassword"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Confirm Password
-            </label>
-            <input
-              id="confirmPassword"
-              type="password"
-              placeholder="Confirm Password"
-              value={formData.confirmPassword}
-              onChange={(e) =>
-                setFormData({ ...formData, confirmPassword: e.target.value })
-              }
-              className={`w-full p-2 mt-1 border rounded-md focus:outline-none focus:ring-2 ${
-                errors.confirmPassword
-                  ? "border-red-500"
-                  : "focus:ring-blue-500"
-              } transition`}
-              required
-            />
-            {errors.confirmPassword && (
-              <p className="text-red-500 text-xs mt-1">
-                {errors.confirmPassword}
-              </p>
-            )}
-          </div>
+
+        <form onSubmit={handleSubmit} className="space-y-5">
+          {/* First Name */}
+          <FormField
+            id="firstName"
+            label="First Name"
+            placeholder="John"
+            value={formData.firstName}
+            onChange={(e) =>
+              setFormData({ ...formData, firstName: e.target.value })
+            }
+            error={errors.firstName}
+          />
+
+          {/* Last Name */}
+          <FormField
+            id="lastName"
+            label="Last Name"
+            placeholder="Doe"
+            value={formData.lastName}
+            onChange={(e) =>
+              setFormData({ ...formData, lastName: e.target.value })
+            }
+            error={errors.lastName}
+          />
+
+          {/* Email */}
+          <FormField
+            id="email"
+            type="email"
+            label="Email"
+            placeholder="you@example.com"
+            value={formData.email}
+            onChange={(e) =>
+              setFormData({ ...formData, email: e.target.value })
+            }
+            error={errors.email}
+          />
+
+          {/* Phone */}
+          <FormField
+            id="phone"
+            label="Phone Number"
+            placeholder="1234567890"
+            value={formData.phone}
+            onChange={(e) =>
+              setFormData({ ...formData, phone: e.target.value })
+            }
+            error={errors.phone}
+          />
+
+          {/* Password */}
+          <FormField
+            id="password"
+            type="password"
+            label="Password"
+            placeholder="Enter your password"
+            value={formData.password}
+            onChange={(e) =>
+              setFormData({ ...formData, password: e.target.value })
+            }
+            error={errors.password}
+          />
+
+          {/* Confirm Password */}
+          <FormField
+            id="confirmPassword"
+            type="password"
+            label="Confirm Password"
+            placeholder="Re-enter password"
+            value={formData.confirmPassword}
+            onChange={(e) =>
+              setFormData({ ...formData, confirmPassword: e.target.value })
+            }
+            error={errors.confirmPassword}
+          />
+
+          {/* Submit Button */}
           <button
             type="submit"
-            className="w-full py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
+            className="w-full py-3 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
           >
             Sign Up
           </button>
         </form>
-        <p className="mt-4 text-center text-gray-600">
+
+        <p className="mt-6 text-center text-gray-600 text-sm">
           Already have an account?{" "}
-          <Link to="/login" className="text-blue-600 hover:underline">
+          <Link
+            to="/login"
+            className="text-blue-600 font-medium hover:underline"
+          >
             Log in
           </Link>
         </p>
@@ -230,5 +166,36 @@ const Signup = () => {
     </div>
   );
 };
+
+const FormField = ({
+  id,
+  label,
+  type = "text",
+  placeholder,
+  value,
+  onChange,
+  error,
+}) => (
+  <div>
+    <label
+      htmlFor={id}
+      className="block text-sm font-medium text-gray-700 mb-1"
+    >
+      {label}
+    </label>
+    <input
+      id={id}
+      type={type}
+      placeholder={placeholder}
+      value={value}
+      onChange={onChange}
+      className={`w-full p-3 border rounded-md focus:outline-none focus:ring-2 ${
+        error ? "border-red-500 focus:ring-red-400" : "focus:ring-blue-500"
+      } transition`}
+      required
+    />
+    {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
+  </div>
+);
 
 export default Signup;
