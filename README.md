@@ -1,4 +1,4 @@
-# Job Application Tracker
+# Job Application Tracker [🔗](https://job-application-tracker-lake.vercel.app/)
 
 A full-stack job application tracking system built for the Shelfex Full-Stack Internship Task.
 
@@ -70,8 +70,8 @@ EMAIL_PASS=your_email_app_password
 
 ## 🌍 Deployment
 
-- **Frontend**: [Deployed on Vercel](#) _(link to be added)_
-- **Backend**: [Deployed on Render](#) _(link to be added)_
+- **Frontend**: [Deployed on Vercel](https://job-application-tracker-lake.vercel.app/)
+- **Backend**: [Deployed on Render](https://jobapplicationtracker-klmi.onrender.com)
 
 ---
 
@@ -113,4 +113,4 @@ job-application-tracker/
 
 ## 📬 Contact
 
-For any questions or feedback, feel free to open an issue or reach out to [your-email@example.com].
+For any questions or feedback, feel free to open an issue or reach out to [the0brand0ambassador@gmail.com].
