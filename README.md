@@ -20,7 +20,7 @@ A full-stack job application tracking system built for the Shelfex Full-Stack In
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/job-application-tracker.git
+git clone https://github.com/thecreatorzx/JobApplicationTracker
 ```
 
 ---

@@ -2,6 +2,7 @@ const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
+const sendEmail = require("../utils/sendEmail");
 
 const router = express.Router();
 
@@ -24,6 +25,11 @@ router.post("/signup", async (req, res) => {
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
       expiresIn: "1d",
     });
+    await sendEmail(
+      email,
+      "Welcome to Job Application Tracker",
+      "Thank you for signing up! Your account is ready to use."
+    );
     res.status(201).json({ token });
   } catch (err) {
     res.status(500).json({ error: "Internal server error" });
